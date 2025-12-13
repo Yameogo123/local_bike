@@ -1,0 +1,39 @@
+
+
+version: 2
+
+models:
+  - name: stg__customers
+    description: "information about customers of the company"
+    columns:
+      - name: customer_id
+        description: "Primary key, id of the customer"
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "First name of the customer"
+      - name: last_name
+        description: "Last name of the customer"
+      - name: phone
+        description: "Tel of the customer"
+      - name: email
+        description: "Email of the customer"
+      - name: street
+        description: "Street of the customer"
+      - name: city
+        description: "City of the customer"
+
+  - name: stg__order_items
+    description: "This model contains information about each item included in an order, including its price, quantity, and shipping cost."
+    columns:
+      - name: order_id
+        description: "Foreign key linking the order item to the corresponding order."
+        tests:
+          - relationships:
+              name: order_id_id_foreign_key_in_stg__order_items
+              to: ref('stg__orders')
+              field: order_id
+      - name: quantity
+        description: "The quantity for this order item."
+

@@ -1,0 +1,35 @@
+
+version: 2
+
+models:
+
+  - name: interm__customers
+    description: "{{ doc('interm__customers') }}"
+
+  - name: interm__order_items
+  
+  - name: interm__orders
+
+  - name: interm__staffs
+
+  - name: interm__stores
+
+  - name: interm__brands
+    description: "brands database"
+    columns:
+      - name: brand_id
+        description: Primary key of the brand
+      - name: brand_name
+        description: the name of the brand
+
+  - name: interm__categories
+    description: "categories database"
+    columns:
+      - name: category_id
+        description: Primary key of the category
+      - name: category_name
+        description: the name of the category
+
+  - name: interm__products
+
+  - name: interm__stocks

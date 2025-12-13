@@ -1,0 +1,11 @@
+
+
+select
+    store.store_name as store_name,
+    store.state as state,
+    store.city as city,
+    product.product_name as product_name
+from
+    {{ ref('stg__stocks') }} stock
+left join {{ ref('interm__stores') }} store on store.store_id = stock.store_id
+left join {{ ref('interm__products') }} product on product.product_id = stock.product_id
