@@ -10,5 +10,5 @@ select
     store_id,
     staff_id
 from 
-    {{ source('localbike', 'staffs') }}
+    {{ source('localbike', 'orders') }}
 

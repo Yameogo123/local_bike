@@ -1,0 +1,93 @@
+version: 2
+
+models:
+
+  - name: stg__brands
+    description: "This model contains brand reference data for products."
+    columns:
+      - name: brand_id
+        description: "Primary key for the brand."
+        tests:
+          - not_null
+          - unique
+
+      - name: brand_name
+        description: "Name of the brand."
+        tests:
+          - not_null
+
+  - name: stg__categories
+    description: "This model contains product category reference data."
+    columns:
+      - name: category_id
+        description: "Primary key for the product category."
+        tests:
+          - not_null
+          - unique
+
+      - name: category_name
+        description: "Name of the product category."
+        tests:
+          - not_null
+
+  - name: stg__products
+    description: "This model contains product-level information including brand, category, and pricing details."
+    columns:
+      - name: product_id
+        description: "Primary key for the product."
+        tests:
+          - not_null
+          - unique
+
+      - name: product_name
+        description: "Name of the product."
+        tests:
+          - not_null
+
+      - name: brand_id
+        description: "Foreign key linking the product to its brand."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__brands')
+              field: brand_id
+
+      - name: category_id
+        description: "Foreign key linking the product to its category."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__categories')
+              field: category_id
+
+      - name: model_year
+        description: "Model year associated with the product."
+
+      - name: list_price
+        description: "price of the product."
+
+  - name: stg__stocks
+    description: "This model contains inventory levels for each product at each store."
+    columns:
+      - name: store_id
+        description: "Foreign key linking the stock record to a store."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__stores')
+              field: store_id
+
+      - name: product_id
+        description: "Foreign key linking the stock record to a product."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__products')
+              field: product_id
+
+      - name: quantity
+        description: "Quantity of the product currently in stock at the store."
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: '>= 0'

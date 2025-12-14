@@ -25,15 +25,161 @@ models:
         description: "City of the customer"
 
   - name: stg__order_items
-    description: "This model contains information about each item included in an order, including its price, quantity, and shipping cost."
+    description: "This model contains information about each item included in an order, including product details, quantity, pricing, and discounts."
     columns:
       - name: order_id
         description: "Foreign key linking the order item to the corresponding order."
         tests:
           - relationships:
-              name: order_id_id_foreign_key_in_stg__order_items
               to: ref('stg__orders')
               field: order_id
-      - name: quantity
-        description: "The quantity for this order item."
 
+      - name: item_id
+        description: "Unique identifier for the order item within an order."
+        tests:
+          - not_null
+
+      - name: product_id
+        description: "Foreign key linking the order item to the purchased product."
+        tests:
+          - relationships:
+              to: ref('stg__products')
+              field: product_id
+
+      - name: quantity
+        description: "Number of units of the product included in this order item."
+        tests:
+          - dbt_utils.expression_is_true:
+              arguments:
+                expression: '>= 0'
+          - not_null
+
+      - name: list_price
+        description: "The listed price of the product at the time of purchase, before discounts are applied."
+
+      - name: discount
+        description: "The discount amount applied to the order item. Typically expressed as a percentage or monetary value depending on source data."
+
+  - name: stg__orders
+    description: "This model contains one record per order, including customer, order status, key dates, and fulfillment details."
+    columns:
+      - name: order_id
+        description: "Primary key for the order."
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: "Foreign key linking the order to the customer who placed it."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__customers')
+              field: customer_id
+
+      - name: order_status
+        description: "Current status of the order (e.g. pending, shipped, completed, cancelled)."
+
+      - name: order_date
+        description: "Date on which the order was placed."
+        tests:
+          - not_null
+
+      - name: required_date
+        description: "Date by which the order is required to be delivered."
+
+      - name: shipped_date
+        description: "Date on which the order was shipped. Null if the order has not yet shipped."
+
+      - name: store_id
+        description: "Foreign key linking the order to the store that fulfilled it."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__stores')
+              field: store_id
+
+      - name: staff_id
+        description: "Foreign key linking the order to the staff member responsible for the order."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__staffs')
+              field: staff_id
+
+  - name: stg__staffs
+    description: "This model contains information about staff members, including their contact details, employment status, and reporting structure."
+    columns:
+      - name: staff_id
+        description: "Primary key for the staff member."
+        tests:
+          - not_null
+          - unique
+
+      - name: first_name
+        description: "First name of the staff member."
+        tests:
+          - not_null
+
+      - name: last_name
+        description: "Last name of the staff member."
+        tests:
+          - not_null
+
+      - name: email
+        description: "Email address of the staff member."
+        tests:
+          - not_null
+
+      - name: phone
+        description: "Phone number of the staff member."
+
+      - name: active
+        description: "Indicator of whether the staff member is currently active."
+
+      - name: store_id
+        description: "Foreign key linking the staff member to the store they work at."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__stores')
+              field: store_id
+
+      - name: manager_id
+        description: "Foreign key referencing the staff member's manager. Null if the staff member has no manager."
+        tests:
+          - relationships:
+              to: ref('stg__staffs')
+              field: staff_id
+
+  - name: stg__stores
+    description: "This model contains information about physical store locations, including contact details and address information."
+    columns:
+      - name: store_id
+        description: "Primary key for the store."
+        tests:
+          - not_null
+          - unique
+
+      - name: store_name
+        description: "Name of the store."
+        tests:
+          - not_null
+
+      - name: phone
+        description: "Phone number of the store."
+
+      - name: email
+        description: "Email address of the store."
+
+      - name: street
+        description: "Street address of the store."
+
+      - name: city
+        description: "City where the store is located."
+
+      - name: state
+        description: "State where the store is located."
+
+      - name: zip_code
+        description: "Postal code for the store's address."
