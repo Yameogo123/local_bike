@@ -10,6 +10,6 @@ select
     list_price
 from 
     {{ ref('stg__products') }} product
-left join {{ ref('interm__brand') }} brand on brand.brand_id = product.brand_id
+left join {{ ref('interm__brands') }} brand on brand.brand_id = product.brand_id
 left join {{ ref('interm__categories') }} cat on cat.category_id = product.category_id
 where product_id is not null
