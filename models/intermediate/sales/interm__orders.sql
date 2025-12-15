@@ -3,6 +3,7 @@
 
 select
     order_id,
+    c.customer_id,
     customer_name,
     customer_street,
     customer_city,
