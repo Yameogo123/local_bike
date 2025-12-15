@@ -2,8 +2,8 @@
 
 select
     store.store_name as store_name,
-    store.state as state,
-    store.city as city,
+    store.store_state as state,
+    store.store_city as city,
     product.product_name as product_name
 from
     {{ ref('stg__stocks') }} stock
