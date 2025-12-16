@@ -12,11 +12,12 @@ select
     order_date,
     required_date, 
     shipped_date,
+    o.store_id as store_id,
     store_name,
     store_street,
     store_city,
     store_state,
-    staff_id
+    cast(staff_id as string) as staff_id
 from 
     {{ ref('stg__orders') }} o
 left join {{ ref('interm__customers') }} c on c.customer_id = o.customer_id

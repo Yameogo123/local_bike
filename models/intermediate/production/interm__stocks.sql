@@ -1,9 +1,11 @@
 
 
 select
+    store.store_id as store_id,
     store.store_name as store_name,
     store.store_state as state,
     store.store_city as city,
+    product.product_id as product_id,
     product.product_name as product_name
 from
     {{ ref('stg__stocks') }} stock
