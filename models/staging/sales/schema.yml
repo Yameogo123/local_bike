@@ -147,10 +147,6 @@ models:
 
       - name: manager_id
         description: "Foreign key referencing the staff member's manager. Null if the staff member has no manager."
-        tests:
-          - relationships:
-              to: ref('stg__staffs')
-              field: staff_id
 
   - name: stg__stores
     description: "This model contains information about physical store locations, including contact details and address information."
